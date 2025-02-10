@@ -1,5 +1,6 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
+import { LayoutDashboard, Users, Settings } from 'lucide-react';
 
 export default function Layout() {
   return (
@@ -12,6 +13,29 @@ export default function Layout() {
                 <span className="ml-2 text-xl font-bold text-gray-900">
                   RBAC System
                 </span>
+              </div>
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                <Link
+                  to="/"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
+                >
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Link>
+                <Link
+                  to="/users"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Users
+                </Link>
+                <Link
+                  to="/roles"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Roles
+                </Link>
               </div>
             </div>
           </div>
