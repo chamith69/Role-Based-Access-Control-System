@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { supabase } from './supabase';
 
 interface User {
   id: string;
@@ -14,6 +15,7 @@ interface AuthState {
   setRoles: (roles: string[]) => void;
   setPermissions: (permissions: string[]) => void;
   hasPermission: (permission: string) => boolean;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -24,6 +26,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setRoles: (roles) => set({ roles }),
   setPermissions: (permissions) => set({ permissions }),
   hasPermission: (permission) => get().permissions.includes(permission),
+  logout: async () => {
+    await supabase.auth.signOut();
+    set({ user: null, roles: [], permissions: [] });
+  },
 }));
+
 
 
