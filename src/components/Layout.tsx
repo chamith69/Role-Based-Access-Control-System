@@ -1,8 +1,11 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
+import { useAuthStore } from '../lib/store';
 import { LayoutDashboard, Users, Settings } from 'lucide-react';
 
 export default function Layout() {
+  const { user, logout } = useAuthStore();
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
