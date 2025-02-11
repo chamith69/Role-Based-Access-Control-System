@@ -56,7 +56,9 @@ export default function Users() {
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              {loading ? (
+              {error ? (
+                <div className="p-4 text-center text-red-500 bg-red-50">{error}</div>
+              ) : loading ? (
                 <div className="p-4 text-center text-gray-500">Loading users...</div>
               ) : users.length === 0 ? (
                 <div className="p-4 text-center text-gray-500">No users found.</div>
@@ -99,3 +101,4 @@ export default function Users() {
     </div>
   );
 }
+
