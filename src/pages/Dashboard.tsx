@@ -4,6 +4,7 @@ import { useAuthStore } from './lib/store';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import Roles from './pages/Roles';
 import Layout from './components/Layout';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -26,6 +27,7 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="users" element={<Users />} />
+          <Route path="roles" element={<Roles />} />
         </Route>
       </Routes>
     </BrowserRouter>
