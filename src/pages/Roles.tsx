@@ -1,7 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { Plus } from 'lucide-react';
 
+interface Role {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
 export default function Roles() {
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('roles')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      setRoles(data || []);
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="sm:flex sm:items-center">
@@ -24,4 +55,5 @@ export default function Roles() {
     </div>
   );
 }
+
 
