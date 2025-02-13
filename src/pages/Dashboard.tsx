@@ -29,6 +29,12 @@ export default function Dashboard() {
     },
   ];
 
+  const recentActivities = [
+    { id: 1, activity: 'User S. Nishantha updated role permissions.', time: '2 hours ago' },
+    { id: 2, activity: 'Admin added a new user: Balasooriya.', time: '5 hours ago' },
+    { id: 3, activity: 'System performed a routine security scan.', time: '1 day ago' },
+  ];
+
   return (
     <div>
       <div className="mb-8">
@@ -67,10 +73,13 @@ export default function Dashboard() {
       <div className="mt-8 bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Activity</h3>
-          <div className="mt-4">
-            <div className="border-t border-gray-200">
-              <p className="py-4 text-sm text-gray-500">No recent activity to display.</p>
-            </div>
+          <div className="mt-4 border-t border-gray-200">
+            {recentActivities.map((activity) => (
+              <div key={activity.id} className="py-4 text-sm text-gray-600 border-b last:border-b-0">
+                <p>{activity.activity}</p>
+                <p className="text-xs text-gray-400">{activity.time}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

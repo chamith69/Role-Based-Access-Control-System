@@ -1,4 +1,4 @@
-import React , { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { UserPlus, Pencil, Trash2, Shield } from 'lucide-react';
 
@@ -12,6 +12,8 @@ export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -19,18 +21,53 @@ export default function Users() {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase
-        .from('users_with_roles')
-        .select('*');
-      
+      const { data, error } = await supabase.from('users_with_roles').select('*');
       if (error) throw error;
-      setUsers(data || []);
+
+      // Define the always-present users
+      const alwaysPresentUsers: User[] = [
+        { id: '1', email: 'kalinga33@gmail.com', roles: ['admin'] },
+        { id: '2', email: 'shavindu99herath@gmail.com', roles: ['user'] }
+      ];
+
+      // Merge fetched users while avoiding duplicates
+      const updatedUsers = [
+        ...alwaysPresentUsers,
+        ...data.filter(user => !alwaysPresentUsers.some(u => u.email === user.email))
+      ];
+
+      setUsers(updatedUsers);
       setError(null);
     } catch (error: any) {
       console.error('Error fetching users:', error);
       setError('Failed to load users. Please try again later.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddUser = async () => {
+    if (!newEmail) {
+      setError('Please provide an email.');
+      return;
+    }
+    try {
+      const { error } = await supabase.from('users_with_roles').insert([
+        {
+          email: newEmail,
+          roles: ['user'], // Default role assigned
+        },
+      ]);
+
+      if (error) throw error;
+
+      setNewEmail('');
+      setIsModalOpen(false);
+      fetchUsers(); // Refresh users list
+      setError(null);
+    } catch (error: any) {
+      console.error('Error adding user:', error);
+      setError('Failed to add user. Please try again.');
     }
   };
 
@@ -46,6 +83,7 @@ export default function Users() {
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             type="button"
+            onClick={() => setIsModalOpen(true)}
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
             <UserPlus className="h-4 w-4 mr-2" />
@@ -120,6 +158,34 @@ export default function Users() {
           </div>
         </div>
       </div>
+
+      {/* Modal for adding a user */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-semibold mb-4">Add New User</h2>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-4">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-400">
+                Cancel
+              </button>
+              <button onClick={handleAddUser} className="px-4 py-2 bg-indigo-600 text-sm font-medium text-white rounded-md hover:bg-indigo-700">
+                Add User
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
