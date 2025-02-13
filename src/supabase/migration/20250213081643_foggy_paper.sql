@@ -1,11 +1,3 @@
-/*
-  # Fix roles policies
-  1. Changes
-    - Drop existing policies
-    - Avoid recursion by simplifying conditions and removing references that lead to indirect policy calls.
-    - Separate access control for read and write operations for authenticated users and admins.
-*/
-
 -- Drop existing policies
 DROP POLICY IF EXISTS "Anyone can read roles" ON roles;
 DROP POLICY IF EXISTS "Admin users can manage roles" ON roles;

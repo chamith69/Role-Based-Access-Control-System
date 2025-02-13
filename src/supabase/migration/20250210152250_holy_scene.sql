@@ -1,16 +1,3 @@
-/*
-  # Create users with roles view
-
-  1. New View
-    - users_with_roles
-      - Combines auth.users with their roles through user_roles junction table
-      - Aggregates role names into an array
-  
-  2. Security
-    - View is accessible to authenticated users through GRANT
-    - Inherits RLS policies from underlying tables
-*/
-
 -- Drop the view if it exists to avoid conflicts
 DROP VIEW IF EXISTS users_with_roles;
 
